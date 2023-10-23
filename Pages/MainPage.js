@@ -1,82 +1,50 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  FlatList,
-  KeyboardAvoidingView,
-} from "react-native";
-import TodoInput from "../components/todoInput";
-import Todos from "../components/todos";
-import { v4 as uuidv4 } from "uuid";
+import { View, StyleSheet, Text, SafeAreaView } from "react-native";
+import SearchFilter from "../components/ui/SearchFilter";
+import CategoryList from "../components/ui/CategoryList";
+import colors from "../constants/colors";
+import AddTask from "../components/ui/AddTask";
+import ModalScreen from "../components/ModalScreen";
 
-const currentDate = new Date();
-// Format the date and time as a string
-const formattedDate = currentDate.toLocaleDateString(); // e.g., "9/29/2023"
-const formattedTime = currentDate.toLocaleTimeString(); // e.g., "10:30:45 AM"
-
-// Combine the date and time
-const formattedDateTime = `${formattedDate} ${formattedTime}`;
 const MainPage = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [todos, setTodos] = useState([]);
-
-  useEffect(() => {
-    console.log("Updated todos:", todos);
-  }, [todos]);
-
-  // creating the to do function
-  function createTodo() {
-    const id = uuidv4();
-    setTodos((prevTodos) => [
-      {
-        key: id,
-        title: title,
-        description: description,
-        DateTime: formattedDateTime,
-      },
-      ...prevTodos,
-    ]);
-    console.log(title);
-    console.log(description);
-    setTitle("");
-    setDescription("");
+  const [visibility, setVisibility] = useState(false);
+  // open the modal
+  function openModal() {
+    setVisibility(true);
   }
-  // deleting todo
-  function deleteTodo(id) {
-    const filteredTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(filteredTodos);
+  //   close the modal
+  function closeModal() {
+    setVisibility(false);
   }
-
   return (
-    <KeyboardAvoidingView
-      style={styles.rootContainer}
-      behavior="padding"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -500}
-    >
-      {/* input area */}
-      <View style={styles.inputContainer}>
-        <TodoInput
-          title={title}
-          setTitle={setTitle}
-          description={description}
-          setDescription={setDescription}
-          createTodo={createTodo}
-        />
+    <>
+      <View style={styles.rootContainer}>
+        <View style={{ padding: 16 }}>
+          <SafeAreaView style={{ marginVertical: 24 }}>
+            <Text style={styles.headerText}>
+              Welcome Back <Text style={styles.headerChildText}>Gerald</Text>
+            </Text>
+          </SafeAreaView>
+          {/* search filter */}
+          <SearchFilter />
+          {/* category */}
+          <View style={{ marginBottom: 16 }}>
+            <Text style={styles.categoryHeading}>Category</Text>
+            <CategoryList />
+          </View>
+        </View>
+        {/* Tasks container */}
+        <View style={styles.taskContainer}>
+          <View style={styles.taskHeader}>
+            <Text style={styles.taskHeading}>Here are your tasks</Text>
+            <View>
+              <AddTask openModal={openModal} />
+            </View>
+          </View>
+        </View>
+        <ModalScreen visibility={visibility} closeModal={closeModal} />
       </View>
-      {/* todos  */}
-      <View style={styles.todosContainer}>
-        <Text></Text>
-        <FlatList
-          data={todos}
-          renderItem={(itemData) => <Todos todos={itemData.item} deleteTodo={deleteTodo} />}
-          keyboardShouldPersistTaps="handled"
-          style={{ flex: 1 }} // Add this style to make the FlatList scrollable
-        />
-      </View>
-    </KeyboardAvoidingView>
+    </>
   );
 };
 
@@ -85,18 +53,34 @@ export default MainPage;
 const styles = StyleSheet.create({
   rootContainer: {
     flex: 1,
-    padding: 16,
+    backgroundColor: colors.primary100,
   },
-  inputContainer: {
-    borderBottomWidth: 1,
-    paddingBottom: 4,
+  headerText: {
+    color: "white",
+    fontSize: 24,
+    fontWeight: "bold",
   },
-  todosContainer: {
-    flex: 1, // Add this to allow the FlatList to scroll
-    marginTop: 12,
+  headerChildText: {
+    color: colors.secondary100,
   },
-  tasksHeading: {
-    fontSize: 18,
+  categoryHeading: {
+    fontSize: 24,
     fontWeight: "700",
+    color: colors.secondary100,
+    marginBottom: 14,
   },
+  taskContainer: {
+    flex: 1,
+    backgroundColor: colors.primary200,
+    borderTopRightRadius: 40,
+    borderTopLeftRadius: 40,
+    padding: 20,
+  },
+  taskHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 24,
+  },
+  taskHeading: { color: colors.secondary100, fontSize: 16, fontWeight: "600" },
 });

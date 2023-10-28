@@ -6,16 +6,15 @@ import {
   SafeAreaView,
   Pressable,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState } from "react";
 import colors from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Picker } from "@react-native-picker/picker";
+import CategoryCard from "./ui/categoryCard";
 import categories from "./dataConstants/categories";
 
-const ModalScreen = ({ visibility, closeModal }) => {
-  const [category, setCategory] = useState();
-
+const ModalScreen = ({ visibility, closeModal , navigation }) => {
   return (
     <Modal visible={visibility} animationType="fade">
       <View style={styles.modalContainer}>
@@ -33,41 +32,22 @@ const ModalScreen = ({ visibility, closeModal }) => {
             <Text style={styles.modalHeaderText}>Add new Task</Text>
           </View>
         </SafeAreaView>
-        {/* Title */}
-        <View style={styles.divider}>
-          <Text style={styles.inputTitles}>Title</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="eg: clean my room"
-            />
-          </View>
-        </View>
-        {/* Category */}
-        <View style={styles.divider}>
-          <Text style={styles.inputTitles}>Category</Text>
-          <Picker
-            selectedValue={category}
-            onValueChange={(itemValue) => setCategory(itemValue)}
-            style={styles.inputContainer}
+        <View style={styles.cardView}>
+          <Text
+            style={{
+              color: colors.secondary100,
+              fontSize: 20,
+              marginBottom: 16,
+              fontWeight: "600",
+            }}
           >
-            {categories.map((cat) => (
-              <Picker.Item
-                key={cat.title}
-                label={cat.title}
-                value={cat.title}
-              />
-            ))}
-          </Picker>
-        </View>
-        {/* more details  */}
-        <View style={styles.divider}>
-          <Text style={styles.inputTitles}>Description</Text>
-          <TextInput
-            style={[styles.inputContainer, {borderRadius: 20}]}
-            multiline
-            numberOfLines={7} // You can adjust this to control the number of visible lines
-            placeholder="eg: mop the floor after lay my bed"
+            Where Do You Want To Add A Task
+          </Text>
+          <FlatList
+            data={categories}
+            keyExtractor={(item) => item.title}
+            renderItem={({ item }) => <CategoryCard navigation={navigation}  closeModal={closeModal} data={item} />}
+            numColumns={2}
           />
         </View>
       </View>
@@ -94,27 +74,10 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 24,
   },
-  inputTitles: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: "white",
-    marginBottom: 4,
-  },
-  inputContainer: {
-    padding: 16,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: "#4444",
-    backgroundColor: colors.primary200,
-  },
-  divider: {
-    marginBottom: 20,
-  },
-  inputText: {
-    fontSize: 16,
-    color: "#444",
-  },
-  picker: {
-    backgroundColor: colors.primary200,
+  cardView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    width: "100%",
   },
 });

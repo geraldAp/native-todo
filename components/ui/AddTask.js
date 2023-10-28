@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import colors from "../../constants/colors";
-import ModalLogic from "../logics/ModalFunction";
 
 const AddTask = ({ openModal }) => {
   const handleAddTask = () => {

@@ -6,7 +6,7 @@ import colors from "../constants/colors";
 import AddTask from "../components/ui/AddTask";
 import ModalScreen from "../components/ModalScreen";
 
-const MainPage = () => {
+const MainPage = ( {navigation}) => {
   const [visibility, setVisibility] = useState(false);
   // open the modal
   function openModal() {
@@ -42,7 +42,7 @@ const MainPage = () => {
             </View>
           </View>
         </View>
-        <ModalScreen visibility={visibility} closeModal={closeModal} />
+        <ModalScreen visibility={visibility} navigation={navigation} closeModal={closeModal} />
       </View>
     </>
   );
